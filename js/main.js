@@ -8,6 +8,33 @@
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var $ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
 
+  /* ---------- Rolagem suave (Lenis) ---------- */
+  var lenis = null;
+  if (window.Lenis && !reduce) {
+    lenis = new window.Lenis({
+      duration: 1.15,
+      easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
+      smoothWheel: true
+    });
+    var raf = function (time) { lenis.raf(time); requestAnimationFrame(raf); };
+    requestAnimationFrame(raf);
+  }
+  // links âncora (#id) rolam suavemente, descontando a topbar fixa
+  $('a[href^="#"]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      var id = a.getAttribute('href');
+      if (!id || id === '#') return;
+      var target = id === '#topo' ? document.body : document.querySelector(id);
+      if (!target) return;
+      e.preventDefault();
+      var bar = document.querySelector('.topbar');
+      var off = id === '#topo' ? 0 : -((bar ? bar.offsetHeight : 0) + 12);
+      if (lenis) lenis.scrollTo(id === '#topo' ? 0 : target, { duration: 1.4 }); // o Lenis já respeita o scroll-margin-top das seções
+      else window.scrollTo({ top: id === '#topo' ? 0 : target.getBoundingClientRect().top + window.scrollY + off, behavior: reduce ? 'auto' : 'smooth' });
+      if (history.replaceState) history.replaceState(null, '', id);
+    });
+  });
+
   /* ---------- Links de inscrição ---------- */
   if (CHECKOUT_URL) {
     $('[data-cta]').forEach(function (a) { a.setAttribute('href', CHECKOUT_URL); });
