@@ -66,7 +66,8 @@ h1{font-size:clamp(36px,3.4vw + 12px,64px);line-height:1.15;letter-spacing:-.01e
 /* ---------- Topbar ---------- */
 .topbar{position:sticky;top:0;z-index:60;background:var(--navy);border-bottom:1px solid rgba(255,255,255,.08)}
 .topbar__in{display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:var(--topbar)}
-.topbar__brand{font-family:var(--head);font-weight:700;font-size:18px;letter-spacing:.06em;color:#fff}
+.topbar__logo{display:block;flex:none;line-height:0}
+.topbar__logo img{height:46px;width:auto}
 
 /* ---------- Seções ---------- */
 .sec{padding-block:clamp(64px,8vw,120px)}
@@ -246,3 +247,5 @@ h1{font-size:clamp(36px,3.4vw + 12px,64px);line-height:1.15;letter-spacing:-.01e
   .split__media--portrait::before{inset:12px 0 0 12px}
   .final__event{padding:24px 20px;width:100%}
 }
+
+@media (max-width:640px){.topbar__logo img{height:40px}}
